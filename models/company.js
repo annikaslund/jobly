@@ -12,6 +12,19 @@ class Company {
         );
         return result.rows;
     }
+
+    /**search() returns a filtered list of companies
+     * {handle, name} for search term that is handle or name
+     */
+    static async search(searchTerm) {
+        const result = await db.query(
+            `SELECT handle, name
+                FROM companies 
+                WHERE handle ILIKE $1 OR name ILIKE $1`,
+                [`%${searchTerm}%`]
+        );
+        return result.rows;
+    }
 }
 
 module.exports = Company;
