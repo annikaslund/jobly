@@ -33,7 +33,7 @@ class Company {
         const result = await db.query(
             `SELECT handle, name
                 FROM companies 
-                WHERE num_employees > $1`,
+                WHERE num_employees >= $1`,
                 [searchTerm]
         );
         return result.rows;
@@ -46,8 +46,21 @@ class Company {
         const result = await db.query(
             `SELECT handle, name
                 FROM companies 
-                WHERE num_employees < $1`,
+                WHERE num_employees <= $1`,
                 [searchTerm]
+        );
+        return result.rows;
+    }
+
+    /**range_of_employees() returns a filtered list of companies
+     * {handle, name} for companies that have the min, max, or range between both
+     */
+    static async range_of_employees(min, max) {
+        const result = await db.query(
+            `SELECT handle, name
+                FROM companies 
+                WHERE num_employees BETWEEN $1 AND $2`,
+                [min, max]
         );
         return result.rows;
     }

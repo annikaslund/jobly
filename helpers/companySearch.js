@@ -1,11 +1,43 @@
 const Company = require('../models/company');
+const ExpressError = require("../helpers/expressError");
 
-function searchHelper(searchTerm){
-    if (searchTerm === undefined){
-        return Company.all();
+async function searchHelper(searchTerms){
+    let { search, min_employees, max_employees } = searchTerms;
+    let baseQuery = `SELECT handle, name FROM companies`;
+    let whereClause = [];
+    let queryInput = [];
+    let idx = 1;
+
+    if (Object.keys(searchTerms).length === 0) {
+        return [baseQuery];
     } else {
-        return Company.search(searchTerm);
+        baseQuery += ` WHERE `;
     }
+
+    if (search) {
+        whereClause.push(`ILIKE $${idx} OR name ILIKE $${idx}`)
+        queryInput.push(`%${search}%`);
+        idx += 1;
+    }
+
+    if ((min_employees !== undefined) || (max_employees !== undefined)){
+        min_employees = min_employees || 0;
+        max_employees = max_employees || 9999;
+
+        if (min_employees > max_employees){
+            throw new ExpressError("min_employees must be less than max_employees", 400);
+        } else {
+             whereClause.push(`num_employees BETWEEN $${idx} AND $${idx+1}`);
+             queryInput.push(min_employees, max_employees)
+             idx += 2;
+        }
+    } 
+
+    let joinedWhereClause = whereClause.join(` AND `);
+    baseQuery += joinedWhereClause;
+    
+    debugger;
+    return [baseQuery, queryInput];
 }
 
 module.exports = searchHelper;
