@@ -23,20 +23,28 @@ async function searchHelper(searchTerms){
     if ((min_employees !== undefined) || (max_employees !== undefined)){
         min_employees = min_employees || 0;
         max_employees = max_employees || 9999;
-
-        if (min_employees > max_employees){
+        
+        if ("where_clase", min_employees > max_employees){
             throw new ExpressError("min_employees must be less than max_employees", 400);
         } else {
              whereClause.push(`num_employees BETWEEN $${idx} AND $${idx+1}`);
              queryInput.push(min_employees, max_employees)
              idx += 2;
         }
+
+        if (search){
+            var joinedWhereClause = whereClause.join(` AND `);
+        }
     } 
 
-    let joinedWhereClause = whereClause.join(` AND `);
+    if (whereClause.length > 1){
+        var joinedWhereClause = whereClause.join(` AND `);
+    } else {
+        var joinedWhereClause = whereClause.join(` `);
+    }
+
     baseQuery += joinedWhereClause;
     
-    debugger;
     return [baseQuery, queryInput];
 }
 
