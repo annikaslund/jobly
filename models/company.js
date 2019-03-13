@@ -27,13 +27,26 @@ class Company {
     }
 
     /**min_employees() returns a filtered list of companies
-     * {handle, name} for companies that have the minimum number specified
+     * {handle, name} for companies that have the minimum number of employees specified
      */
     static async min_employees(searchTerm) {
         const result = await db.query(
             `SELECT handle, name
                 FROM companies 
-                WHERE num_employees >= $1`,
+                WHERE num_employees > $1`,
+                [searchTerm]
+        );
+        return result.rows;
+    }
+
+    /**max_employees() returns a filtered list of companies
+     * {handle, name} for companies that have the maximum number of employees specified
+     */
+    static async max_employees(searchTerm) {
+        const result = await db.query(
+            `SELECT handle, name
+                FROM companies 
+                WHERE num_employees < $1`,
                 [searchTerm]
         );
         return result.rows;
