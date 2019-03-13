@@ -8,15 +8,27 @@ const searchHelper = require("../helpers/companySearch");
 router.get('/', async function(req, res, next){
     try{
         //get search term if there is any
-        let searchTerm = req.query.search;
-        if (searchTerm === undefined) {
+        let searchTerm = req.query;
+
+        if (searchTerm.hasOwnProperty("search") ) {
+            const companies = await Company.search(searchTerm.search);
+            return res.json({ companies });
+
+        } else if (searchTerm.hasOwnProperty("min_employees")){
+            const companies = await Company.min_employees(searchTerm.min_employees);
+            return res.json({ companies });
+        } else {
             const companies = await Company.all();
             return res.json({ companies });
         }
-        else if (isNaN(Number(searchTerm))){
-            const companies = await Company.search(searchTerm);
-            return res.json({ companies });
-        }
+        // if searchTerm.hasOwnProperty("search") 
+            // Company.search(searchTerm)
+        // if searchTerm.hasOwnProperty("min_employees")
+            // Company.min_employees(searchTerm)
+        // if searchTerm.hasOwnProperty("max_employees")
+             // Company.max_employees(searchTerm)
+        // else 
+            // get all companies (when no search term is passed, req.query = {})
         
     } catch (err) {
         return next(err);

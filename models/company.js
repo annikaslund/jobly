@@ -25,6 +25,19 @@ class Company {
         );
         return result.rows;
     }
+
+    /**min_employees() returns a filtered list of companies
+     * {handle, name} for companies that have the minimum number specified
+     */
+    static async min_employees(searchTerm) {
+        const result = await db.query(
+            `SELECT handle, name
+                FROM companies 
+                WHERE num_employees >= $1`,
+                [searchTerm]
+        );
+        return result.rows;
+    }
 }
 
 module.exports = Company;
