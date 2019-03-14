@@ -87,7 +87,7 @@ describe("POST /companies", async function(){
             logo_url: "test2.jpeg"
         });
         const company = response.body.company;
-        console.log(response.body)
+
         expect(response.statusCode).toBe(200);
         expect(company).toHaveProperty('handle');
         expect(company.name).toEqual('testing2');
@@ -95,6 +95,22 @@ describe("POST /companies", async function(){
 });
 
 // test PATCH /companies/:handle
+describe("PATCH /companies/:handle", async function(){ 
+    test("Update a company and return the updated company data", async function() {
+        const response = await request(app)
+        .patch('/companies/TEST')
+        .send({
+            name: "updatedTestCompany",
+            num_employees: 101
+        });
+        const company = response.body.company;
+
+        expect(response.statusCode).toBe(200);
+        expect(company).toHaveProperty('name');
+        expect(company.name).toEqual('updatedTestCompany');
+        expect(company.num_employees).toEqual(101);
+    });
+});
 // test DELETE /companies/:handle
 afterEach(async function(){
     await db.query(`DELETE FROM companies`);
