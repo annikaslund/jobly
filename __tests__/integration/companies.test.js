@@ -111,10 +111,33 @@ describe("PATCH /companies/:handle", async function(){
         expect(company.num_employees).toEqual(101);
     });
 });
+
 // test DELETE /companies/:handle
+describe("DELETE /companies/:handle", async function(){ 
+    test("Delete a company returns a friendly message if sucessful.", async function() {
+        const response = await request(app)
+        .delete('/companies/TEST');
+        const message = response.body.message;
+        console.log(message);
+        expect(response.statusCode).toBe(200);
+        expect(message).toEqual('Company deleted');
+    });
+
+    test("Deleting a company that doesn't exist will return an error message.", async function() {
+        const response = await request(app)
+        .delete('/companies/DOESNOTEXIST');
+        const message = response.body.message;
+        console.log(message);
+        expect(response.statusCode).toBe(404);
+        expect(message).toEqual('Invalid handle');
+    });
+});
+
+
 afterEach(async function(){
     await db.query(`DELETE FROM companies`);
 })
+
 // after all 
    // close the connection to db
 afterAll(async function(){
