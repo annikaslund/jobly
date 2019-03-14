@@ -60,12 +60,24 @@ router.patch('/:handle', async function(req, res, next){
             //pass validation errors to error handler
             let listOfErrors = result.errors.map(error => error.stack);
             let error = new ExpressError(listOfErrors, 400);
-            return next(error)
+            return next(error);
         }
 
         let company = await Company.update(req.body);
-        return res.json({ company })
+        return res.json({ company });
     } catch (err){
+        return next(err);
+    }
+})
+
+/** DELETE a company given handle from params, 
+ * returning message when deleted successfully
+ */
+router.delete('/:handle', async function(req, res, next){
+    try {
+        const message = await Company.delete(req.params.handle);
+        return res.json({ message });
+    } catch (err) {
         return next(err);
     }
 })
