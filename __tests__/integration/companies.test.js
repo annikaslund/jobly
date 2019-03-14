@@ -34,7 +34,7 @@ describe("GET /companies", async function(){
         expect(response.statusCode).toBe(200);
         expect(companies).toHaveLength(1);
         expect(companies[0].handle).toEqual('TEST');
-        expect(companies[0].name).toEqual('testing');
+        expect(companies[0]).toEqual({"handle": "TEST", "name": "testing"});
     });
 
     test("Gets a list of companies by minimum number of employees", async function() {
@@ -43,8 +43,7 @@ describe("GET /companies", async function(){
 
         expect(response.statusCode).toBe(200);
         expect(companies).toHaveLength(1);
-        expect(companies[0].handle).toEqual('TEST');
-        expect(companies[0].name).toEqual('testing');
+        expect(companies[0]).toEqual({"handle": "TEST", "name": "testing"});
     });
 
     test("Gets an empty list when no records match query string", async function() {
@@ -61,8 +60,7 @@ describe("GET /companies", async function(){
 
         expect(response.statusCode).toBe(200);
         expect(companies).toHaveLength(1);
-        expect(companies[0].handle).toEqual('TEST');
-        expect(companies[0].name).toEqual('testing');
+        expect(companies[0]).toEqual({"handle": "TEST", "name": "testing"});
     });
 
     test("Gets an empty list when no records match query string", async function() {
@@ -90,7 +88,7 @@ describe("POST /companies", async function(){
 
         expect(response.statusCode).toBe(200);
         expect(company).toHaveProperty('handle');
-        expect(company.name).toEqual('testing2');
+        expect(company).toEqual({"description": "testing des2", "handle": "TEST2", "logo_url": "test2.jpeg", "name": "testing2", "num_employees": 77});
     });
 });
 
@@ -107,8 +105,7 @@ describe("PATCH /companies/:handle", async function(){
 
         expect(response.statusCode).toBe(200);
         expect(company).toHaveProperty('name');
-        expect(company.name).toEqual('updatedTestCompany');
-        expect(company.num_employees).toEqual(101);
+        expect(company).toEqual({"description": "testing description", "handle": "TEST", "logo_url": "test.jpeg", "name": "updatedTestCompany", "num_employees": 101});
     });
 
     test("Update a company with invalid data and return error message", async function() {
@@ -151,8 +148,6 @@ afterEach(async function(){
     await db.query(`DELETE FROM companies`);
 })
 
-// after all 
-   // close the connection to db
 afterAll(async function(){
     await db.end()
 })

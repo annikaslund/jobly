@@ -1,4 +1,3 @@
-const Company = require('../models/company');
 const ExpressError = require("../helpers/expressError");
 
 async function searchHelper(searchTerms){
@@ -7,6 +6,7 @@ async function searchHelper(searchTerms){
     let whereClause = [];
     let queryInput = [];
     let idx = 1;
+    let joinedWhereClause;
 
     if (Object.keys(searchTerms).length === 0) {
         return [baseQuery];
@@ -17,7 +17,9 @@ async function searchHelper(searchTerms){
     if (search) {
         whereClause.push(`(handle >= $${idx} AND handle < $${idx+1}) 
                             OR (name >= $${idx} AND name < $${idx+1})`)
-        nextChar = String.fromCharCode(search.charCodeAt(0)+1);
+        // consider using alphabet string/array 
+        // gets utf letter code, stores next letter based on letter code + 1
+        let nextChar = String.fromCharCode(search.charCodeAt(0)+1);
         queryInput.push(search[0], nextChar);
         idx += 2;
     }
@@ -25,7 +27,8 @@ async function searchHelper(searchTerms){
     if ((min_employees !== undefined) || (max_employees !== undefined)){
         min_employees = min_employees || 0;
         max_employees = max_employees || 9999;
-        if ("where_clase", min_employees > max_employees){
+
+        if (min_employees > max_employees){
             throw new ExpressError("min_employees must be less than max_employees", 400);
         } else {
              whereClause.push(`num_employees BETWEEN $${idx} AND $${idx+1}`);
@@ -35,9 +38,9 @@ async function searchHelper(searchTerms){
     } 
 
     if (whereClause.length > 1){
-        var joinedWhereClause = whereClause.join(` AND `);
+        joinedWhereClause = whereClause.join(` AND `);
     } else {
-        var joinedWhereClause = whereClause.join(` `);
+        joinedWhereClause = whereClause.join(` `);
     }
 
     baseQuery += joinedWhereClause;
