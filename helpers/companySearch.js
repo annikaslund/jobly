@@ -9,7 +9,7 @@ async function searchHelper(searchTerms){
     let idx = 1;
 
     if (Object.keys(searchTerms).length === 0) {
-        return await Company.search(baseQuery);
+        return [baseQuery];
     } else {
         baseQuery += ` WHERE `;
     }
@@ -17,16 +17,14 @@ async function searchHelper(searchTerms){
     if (search) {
         whereClause.push(`(handle >= $${idx} AND handle < $${idx+1}) 
                             OR (name >= $${idx} AND name < $${idx+1})`)
-        //whereClause.push(`handle ILIKE $${idx} OR name ILIKE $${idx}`)
         nextChar = String.fromCharCode(search.charCodeAt(0)+1);
         queryInput.push(search[0], nextChar);
-        idx += 1;
+        idx += 2;
     }
 
     if ((min_employees !== undefined) || (max_employees !== undefined)){
         min_employees = min_employees || 0;
         max_employees = max_employees || 9999;
-        
         if ("where_clase", min_employees > max_employees){
             throw new ExpressError("min_employees must be less than max_employees", 400);
         } else {
@@ -34,10 +32,6 @@ async function searchHelper(searchTerms){
              queryInput.push(min_employees, max_employees)
              idx += 2;
         }
-
-        // if (search){
-        //     var joinedWhereClause = whereClause.join(` AND `);
-        // }
     } 
 
     if (whereClause.length > 1){
@@ -47,7 +41,7 @@ async function searchHelper(searchTerms){
     }
 
     baseQuery += joinedWhereClause;
-    return await Company.search(baseQuery, queryInput);
+    return await [baseQuery, queryInput];
 }
 
 module.exports = searchHelper;

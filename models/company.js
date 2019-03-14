@@ -2,65 +2,18 @@ const db = require('../db');
 
 /** Company of the site */
 class Company {
-    /** all() returns a list of companies
-     * {handle, name} for all of the company objects
-     */
-    static async all() {
-        const result = await db.query(
-            `SELECT handle, name
-                FROM companies`
-        );
-        return result.rows;
-    }
 
     /**search() returns a filtered list of companies
      * {handle, name} for search term that is handle or name
      */
-    static async search(sql, input=null) {
-        console.log(sql, input); //passed from helper/companySearch [query, [values]]
-        const result = await db.query(sql, input);
+    static async search(sqlArray) {
+        //passed from helper/companySearch [query, [values]]
+        const result = await db.query(sqlArray[0], sqlArray[1]);
         
         return result.rows;
     }
 
-    /**min_employees() returns a filtered list of companies
-     * {handle, name} for companies that have the minimum number of employees specified
-     */
-    static async min_employees(searchTerm) {
-        const result = await db.query(
-            `SELECT handle, name
-                FROM companies 
-                WHERE num_employees >= $1`,
-                [searchTerm]
-        );
-        return result.rows;
-    }
 
-    /**max_employees() returns a filtered list of companies
-     * {handle, name} for companies that have the maximum number of employees specified
-     */
-    static async max_employees(searchTerm) {
-        const result = await db.query(
-            `SELECT handle, name
-                FROM companies 
-                WHERE num_employees <= $1`,
-                [searchTerm]
-        );
-        return result.rows;
-    }
-
-    /**range_of_employees() returns a filtered list of companies
-     * {handle, name} for companies that have the min, max, or range between both
-     */
-    static async range_of_employees(min, max) {
-        const result = await db.query(
-            `SELECT handle, name
-                FROM companies 
-                WHERE num_employees BETWEEN $1 AND $2`,
-                [min, max]
-        );
-        return result.rows;
-    }
 }
 
 module.exports = Company;
