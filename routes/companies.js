@@ -5,6 +5,7 @@ const ExpressError = require("../helpers/expressError");
 const searchHelper = require("../helpers/companySearch");
 const jsonschema = require("jsonschema");
 const companySchema = require("../schemas/companySchema.json");
+const updateCompanySchema = require("../schemas/updateCompanySchema.json");
 
 /** GET a list of filtered companies with {handle, name} */
 router.get('/', async function(req, res, next){
@@ -47,8 +48,29 @@ router.get('/:handle', async function(req, res, next){
     }
 })
 
+/** Given information, updates specified company by handle. Returns the updated data. */
+router.patch('/:handle', async function(req, res, next){
+    try {
+        // get handle from params
+        const handle = req.params.handle;
+        req.body["handle"] = handle;
+        // validate new information
+        const result = jsonschema.validate(req.body, updateCompanySchema);
 
+        if (!result.valid) {
+            //pass validation errors to error handler
+            let listOfErrors = result.errors.map(error => error.stack);
+            let error = new ExpressError(listOfErrors, 400);
+            return next(error)
+        }
 
-
+        // send handle and update info to Company.update()
+        let company = await Company.update(req.body);
+        // return
+        return res.json({ company })
+    } catch (err){
+        return next(err);
+    }
+})
 
 module.exports = router;

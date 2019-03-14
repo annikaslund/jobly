@@ -1,5 +1,4 @@
 const db = require('../db');
-const ExpressError = require('../helpers/expressError');
 
 /** Company of the site */
 class Company {
@@ -41,8 +40,36 @@ class Company {
                 [handle]
         );
         if (result.rows.length === 0){
-            throw new ExpressError('Invalid handle', 404);
+            throw { message: 'Invalid handle', status: 404 };
         }
+        return result.rows[0];
+    }
+
+    /** given a handle and new company information, will update an existing
+     * company's information. returns updated company data as:
+     * {handle, name, num_employees, description, logo_url} 
+     */
+    static async update(updatingInfo){
+        let query = `UPDATE companies SET `
+        let setClause = [];
+        let setValues = []
+        let idx = 1;
+
+        for (let key in updatingInfo){
+            if (updatingInfo[key] === updatingInfo.handle){
+                continue;
+            }
+            setClause.push(`${key}=($${idx})`);
+            setValues.push(updatingInfo[key]);
+            idx += 1;
+        }
+
+        setClause = setClause.join(', ');
+        query += setClause;
+        query += ` WHERE handle=$${idx} RETURNING handle, name, num_employees, description, logo_url`;
+        setValues.push(updatingInfo.handle);
+
+        let result = await db.query(query, setValues);
         return result.rows[0];
     }
 }
