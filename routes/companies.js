@@ -20,17 +20,22 @@ router.get('/', async function(req, res, next){
 
 /** POST will create a new company and return the newly created company */
 router.post('/', async function(req, res, next){
-    const result = jsonschema.validate(req.body, companySchema);
-
-    if (!result.valid) {
-        //pass validation errors to error handler
-        let listOfErrors = result.errors.map(error => error.stack);
-        let error = new ExpressError(listOfErrors, 400);
-        return next(error)
-    }
+    try {
+        const result = jsonschema.validate(req.body, companySchema);
     
-    const { company } = req.company;
-    return res.json(company);
+        if (!result.valid) {
+            //pass validation errors to error handler
+            let listOfErrors = result.errors.map(error => error.stack);
+            let error = new ExpressError(listOfErrors, 400);
+            return next(error)
+        }
+        
+        // debugger;
+        // const company  = req.company;
+        // return res.json({ company });
+    } catch (err) {
+        return next(err);
+    }
 })
 
 

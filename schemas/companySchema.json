@@ -5,71 +5,61 @@
     "type": "object",
     "title": "The Root Schema",
     "required": [
-        "company"
+      "handle",
+      "name",
+      "num_employees",
+      "description",
+      "logo_url"
     ],
     "properties": {
-        "company": {
-            "$id": "#/properties/company",
-            "type": "object",
-            "title": "The Company Schema",
-            "required": [
-                "handle",
-                "name",
-                "num_employees",
-                "description",
-                "logo_url"
-            ],
-            "properties": {
-                "handle": {
-                    "$id": "#/properties/company/properties/handle",
-                    "type": "string",
-                    "title": "The Handle Schema",
-                    "default": "",
-                    "examples": [
-                        "RIT"
-                    ],
-                    "pattern": "^(.*)$"
-                },
-                "name": {
-                    "$id": "#/properties/company/properties/name",
-                    "type": "string",
-                    "title": "The Name Schema",
-                    "default": "",
-                    "examples": [
-                        "rithm"
-                    ],
-                    "pattern": "^(.*)$"
-                },
-                "num_employees": {
-                    "$id": "#/properties/company/properties/num_employees",
-                    "type": "integer",
-                    "title": "The Num_employees Schema",
-                    "default": 0,
-                    "examples": [
-                        8
-                    ]
-                },
-                "description": {
-                    "$id": "#/properties/company/properties/description",
-                    "type": "string",
-                    "title": "The Description Schema",
-                    "default": "",
-                    "examples": [
-                        "coding school"
-                    ],
-                    "pattern": "^(.*)$"
-                },
-                "logo_url": {
-                    "$id": "#/properties/company/properties/logo_url",
-                    "type": "string",
-                    "title": "The Logo_url Schema",
-                    "default": "",
-                    "examples": [
-                        "https://www.rithmschool.com/assets/logos/rithm_logo-52c2ff4eb53876f905ff2d8b1d46b5ec737caa4d9f9acf4790dcd856f3ccc638.svg"
-                    ],
-                    "pattern": "^(.*)$"
-                }
-            }
-        }
+      "handle": {
+        "$id": "#/properties/handle",
+        "type": "string",
+        "title": "The Handle Schema",
+        "default": "",
+        "examples": [
+          "TST"
+        ],
+        "pattern": "^(.*)$"
+      },
+      "name": {
+        "$id": "#/properties/name",
+        "type": "string",
+        "title": "The Name Schema",
+        "default": "",
+        "examples": [
+          "test"
+        ],
+        "pattern": "^(.*)$"
+      },
+      "num_employees": {
+        "$id": "#/properties/num_employees",
+        "type": "integer",
+        "title": "The Num_employees Schema",
+        "default": 0,
+        "examples": [
+          5
+        ]
+      },
+      "description": {
+        "$id": "#/properties/description",
+        "type": "string",
+        "title": "The Description Schema",
+        "default": "",
+        "examples": [
+          "test description"
+        ],
+        "pattern": "^(.*)$"
+      },
+      "logo_url": {
+        "$id": "#/properties/logo_url",
+        "type": "string",
+        "title": "The Logo_url Schema",
+        "default": "",
+        "examples": [
+          "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_120x44dp.png"
+        ],
+        "pattern": "^(.*)$"
+      }
     }
-}
+  }
