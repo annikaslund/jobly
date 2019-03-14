@@ -51,10 +51,9 @@ router.get('/:handle', async function(req, res, next){
 /** Given information, updates specified company by handle. Returns the updated data. */
 router.patch('/:handle', async function(req, res, next){
     try {
-        // get handle from params
         const handle = req.params.handle;
         req.body["handle"] = handle;
-        // validate new information
+
         const result = jsonschema.validate(req.body, updateCompanySchema);
 
         if (!result.valid) {
@@ -64,9 +63,7 @@ router.patch('/:handle', async function(req, res, next){
             return next(error)
         }
 
-        // send handle and update info to Company.update()
         let company = await Company.update(req.body);
-        // return
         return res.json({ company })
     } catch (err){
         return next(err);
