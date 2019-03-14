@@ -37,6 +37,15 @@ router.post('/', async function(req, res, next){
     }
 })
 
+/** Get a single company found by its id (handle) returning the company data */
+router.get('/:handle', async function(req, res, next){
+    try {
+        const company = await Company.findOne(req.params.handle);
+        return res.json({ company })
+    } catch (err) {
+        return next(err);
+    }
+})
 
 
 

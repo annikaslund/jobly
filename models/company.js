@@ -1,4 +1,5 @@
 const db = require('../db');
+const ExpressError = require('../helpers/expressError');
 
 /** Company of the site */
 class Company {
@@ -25,6 +26,23 @@ class Company {
             RETURNING handle, name, num_employees, description, logo_url`,
             [handle, name, num_employees, description, logo_url]);
         
+        return result.rows[0];
+    }
+
+    /** return a company's data given handle 
+     * it will return the existing company data as:
+       {handle, name, num_employees, description, logo_url} 
+     */
+    static async findOne(handle){
+        const result = await db.query(
+            `SELECT handle, name, num_employees, description, logo_url
+                FROM companies
+                WHERE handle=$1`,
+                [handle]
+        );
+        if (result.rows.length === 0){
+            throw new ExpressError('Invalid handle', 404);
+        }
         return result.rows[0];
     }
 }
