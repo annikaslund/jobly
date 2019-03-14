@@ -75,6 +75,24 @@ describe("GET /companies", async function(){
 });
 
 // test POST /companies
+describe("POST /companies", async function(){ 
+    test("Create a company and return the new company data", async function() {
+        const response = await request(app)
+        .post('/companies')
+        .send({
+            handle: "TEST2",
+            name: "testing2",
+            num_employees: 77,
+            description: "testing des2", 
+            logo_url: "test2.jpeg"
+        });
+        const company = response.body.company;
+        console.log(response.body)
+        expect(response.statusCode).toBe(200);
+        expect(company).toHaveProperty('handle');
+        expect(company.name).toEqual('testing2');
+    });
+});
 
 // test PATCH /companies/:handle
 // test DELETE /companies/:handle
