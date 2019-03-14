@@ -110,6 +110,19 @@ describe("PATCH /companies/:handle", async function(){
         expect(company.name).toEqual('updatedTestCompany');
         expect(company.num_employees).toEqual(101);
     });
+
+    test("Update a company with invalid data and return error message", async function() {
+        const response = await request(app)
+        .patch('/companies/TESTTTTTT')
+        .send({
+            name: "updatedTestCompany",
+            num_employees: 101
+        });
+        const message = response.body.message;
+
+        expect(response.statusCode).toBe(404);
+        expect(message).toEqual('invalid handle');
+    });
 });
 
 // test DELETE /companies/:handle
@@ -118,7 +131,7 @@ describe("DELETE /companies/:handle", async function(){
         const response = await request(app)
         .delete('/companies/TEST');
         const message = response.body.message;
-        console.log(message);
+        
         expect(response.statusCode).toBe(200);
         expect(message).toEqual('Company deleted');
     });
@@ -127,7 +140,7 @@ describe("DELETE /companies/:handle", async function(){
         const response = await request(app)
         .delete('/companies/DOESNOTEXIST');
         const message = response.body.message;
-        console.log(message);
+        
         expect(response.statusCode).toBe(404);
         expect(message).toEqual('Invalid handle');
     });
