@@ -16,13 +16,10 @@ class Company {
     /**search() returns a filtered list of companies
      * {handle, name} for search term that is handle or name
      */
-    static async search(searchTerm) {
-        const result = await db.query(
-            `SELECT handle, name
-                FROM companies 
-                WHERE handle ILIKE $1 OR name ILIKE $1`,
-                [`%${searchTerm}%`]
-        );
+    static async search(sql, input=null) {
+        console.log(sql, input); //passed from helper/companySearch [query, [values]]
+        const result = await db.query(sql, input);
+        
         return result.rows;
     }
 

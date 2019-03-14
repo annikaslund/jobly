@@ -8,7 +8,6 @@ const searchHelper = require("../helpers/companySearch");
 router.get('/', async function(req, res, next){
     try{
         //get search term if there is any
-
         let companies = await searchHelper(req.query);
         return res.json({ companies })   
     } catch (err) {

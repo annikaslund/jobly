@@ -9,14 +9,17 @@ async function searchHelper(searchTerms){
     let idx = 1;
 
     if (Object.keys(searchTerms).length === 0) {
-        return [baseQuery];
+        return await Company.search(baseQuery);
     } else {
         baseQuery += ` WHERE `;
     }
 
     if (search) {
-        whereClause.push(`ILIKE $${idx} OR name ILIKE $${idx}`)
-        queryInput.push(`%${search}%`);
+        whereClause.push(`(handle >= $${idx} AND handle < $${idx+1}) 
+                            OR (name >= $${idx} AND name < $${idx+1})`)
+        //whereClause.push(`handle ILIKE $${idx} OR name ILIKE $${idx}`)
+        nextChar = String.fromCharCode(search.charCodeAt(0)+1);
+        queryInput.push(search[0], nextChar);
         idx += 1;
     }
 
@@ -32,9 +35,9 @@ async function searchHelper(searchTerms){
              idx += 2;
         }
 
-        if (search){
-            var joinedWhereClause = whereClause.join(` AND `);
-        }
+        // if (search){
+        //     var joinedWhereClause = whereClause.join(` AND `);
+        // }
     } 
 
     if (whereClause.length > 1){
@@ -44,8 +47,7 @@ async function searchHelper(searchTerms){
     }
 
     baseQuery += joinedWhereClause;
-    
-    return [baseQuery, queryInput];
+    return await Company.search(baseQuery, queryInput);
 }
 
 module.exports = searchHelper;
