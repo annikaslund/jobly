@@ -12,16 +12,16 @@
  *
  */
 
-function sqlForPartialUpdate(table, items, key, id) {
+function sqlForPartialUpdate(table, items, key, id, safeData) {
   // keep track of item indexes
   // store all the columns we want to update and associate with vals
 
   let idx = 1;
   let columns = [];
-
   // filter out keys that start with "_" -- we don't want these in DB
   for (let key in items) {
-    if (key.startsWith('_')) {
+    console.log(key)
+    if (key.startsWith('_') || !safeData.includes(key)) {
       delete items[key];
     }
   }
@@ -30,7 +30,7 @@ function sqlForPartialUpdate(table, items, key, id) {
     columns.push(`${column}=$${idx}`);
     idx += 1;
   }
-
+  console.log(columns);
   // build query
   let cols = columns.join(', ');
   let query = `UPDATE ${table} SET ${cols} WHERE ${key}=$${idx} RETURNING *`;

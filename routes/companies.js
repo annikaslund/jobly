@@ -62,8 +62,9 @@ router.patch('/:handle', async function(req, res, next){
             let error = new ExpressError(listOfErrors, 400);
             return next(error);
         }
+        delete req.body.handle;
 
-        let company = await Company.update(req.body);
+        let company = await Company.update(req.body, handle);
         return res.json({ company });
     } catch (err){
         return next(err);

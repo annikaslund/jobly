@@ -1,7 +1,13 @@
 const db = require('../db');
+const sqlForPartialUpdate = require('../helpers/partialUpdate');
 
 /** Company of the site */
 class Company {
+
+    static safeData(){
+        let validCols = ['handle', 'name', 'num_employees', 'description', 'logo_url']
+        return validCols;
+    }
 
     /**search() returns a filtered list of companies
      * {handle, name} for search term that is handle or name
@@ -49,28 +55,10 @@ class Company {
      * company's information. returns updated company data as:
      * {handle, name, num_employees, description, logo_url} 
      */
-    static async update(updatingInfo){
-        //consider use sqlForPartialUpdate(companies, updatingInfo, key, id)
+    static async update(data, handle){
 
-        let query = `UPDATE companies SET `
-        let setClause = [];
-        let setValues = []
-        let idx = 1;
 
-        for (let key in updatingInfo){
-            if (updatingInfo[key] === updatingInfo.handle){
-                continue;
-            }
-            setClause.push(`${key}=($${idx})`);
-            setValues.push(updatingInfo[key]);
-            idx += 1;
-        }
-
-        setClause = setClause.join(', ');
-        query += setClause;
-        query += ` WHERE handle=$${idx} RETURNING handle, name, num_employees, description, logo_url`;
-        setValues.push(updatingInfo.handle);
-
+        const { query, setValues } = sqlForPartialUpdate('companies', data, 'handle', handle, Company.safeData())
         let result = await db.query(query, setValues);
         if (result.rows.length === 0){
             throw {message: "invalid handle", status: 404};

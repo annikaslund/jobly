@@ -1,5 +1,5 @@
 process.env.NODE_ENV = "test";
-const sqlForPartialUpdate = require("../../helpers/partialUpdate")
+const sqlForPartialUpdate = require("../../helpers/partialUpdate");
 
 // const app = require("../app");
 
