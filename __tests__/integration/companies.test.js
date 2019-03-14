@@ -4,7 +4,7 @@ const request = require("supertest");
 const app = require("../../app");
 const db = require("../../db");
 
-let company_handle;
+// let company_handle;
 
 beforeEach(async function(){
     let result = await db.query(`
@@ -12,7 +12,7 @@ beforeEach(async function(){
         VALUES ('TEST', 'testing', 10, 'testing description', 'test.jpeg')
         RETURNING handle`);
     
-    company_handle = result.rows[0].handle;
+    // company_handle = result.rows[0].handle;
 });
 
 // test GET /companies

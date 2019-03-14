@@ -56,10 +56,8 @@ class Company {
      * {handle, name, num_employees, description, logo_url} 
      */
     static async update(data, handle){
-
-
-        const { query, setValues } = sqlForPartialUpdate('companies', data, 'handle', handle, Company.safeData())
-        let result = await db.query(query, setValues);
+        const { query, values} = sqlForPartialUpdate('companies', data, 'handle', handle, Company.safeData())
+        let result = await db.query(query, values);
         if (result.rows.length === 0){
             throw {message: "invalid handle", status: 404};
         }

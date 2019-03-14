@@ -18,9 +18,10 @@ function sqlForPartialUpdate(table, items, key, id, safeData) {
 
   let idx = 1;
   let columns = [];
-  // filter out keys that start with "_" -- we don't want these in DB
+
+  // filter out keys that start with "_" -- we don't want these in DB or 
+  // unsafe keys
   for (let key in items) {
-    console.log(key)
     if (key.startsWith('_') || !safeData.includes(key)) {
       delete items[key];
     }
@@ -30,7 +31,7 @@ function sqlForPartialUpdate(table, items, key, id, safeData) {
     columns.push(`${column}=$${idx}`);
     idx += 1;
   }
-  console.log(columns);
+
   // build query
   let cols = columns.join(', ');
   let query = `UPDATE ${table} SET ${cols} WHERE ${key}=$${idx} RETURNING *`;
