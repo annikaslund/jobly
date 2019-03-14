@@ -50,6 +50,8 @@ class Company {
      * {handle, name, num_employees, description, logo_url} 
      */
     static async update(updatingInfo){
+        //consider use sqlForPartialUpdate(companies, updatingInfo, key, id)
+
         let query = `UPDATE companies SET `
         let setClause = [];
         let setValues = []
@@ -70,7 +72,27 @@ class Company {
         setValues.push(updatingInfo.handle);
 
         let result = await db.query(query, setValues);
+        if (result.rows.length === 0){
+            throw {message: "invalid handle", status: 404};
+        }
         return result.rows[0];
+    }
+
+    /**DELETE company from database given handle
+     * returning message of successfully deleted if handle is correct
+     */
+    static async delete(handle) {
+        const result = await db.query(
+            `DELETE FROM companies
+                WHERE handle=$1
+                RETURNING handle`,
+                [handle]
+        );
+        
+        if (result.rows.length === 0) {
+            throw { message: "Invalid handle", status: 404};
+        }
+        return 'Company deleted'
     }
 }
 
