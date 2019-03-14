@@ -22,7 +22,7 @@ router.get('/', async function(req, res, next){
 router.post('/', async function(req, res, next){
     try {
         const result = jsonschema.validate(req.body, companySchema);
-    
+
         if (!result.valid) {
             //pass validation errors to error handler
             let listOfErrors = result.errors.map(error => error.stack);
@@ -30,9 +30,8 @@ router.post('/', async function(req, res, next){
             return next(error)
         }
         
-        // debugger;
-        // const company  = req.company;
-        // return res.json({ company });
+        let company = await Company.create(req.body);
+        return res.json({ company });
     } catch (err) {
         return next(err);
     }
