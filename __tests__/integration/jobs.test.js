@@ -45,11 +45,7 @@ describe("POST /jobs", async function(){
     });
 });
 
-// GET /jobs
-    // testing search
-    // min_salary 
-    // max_salary
-
+// test GET /jobs
     describe("GET /jobs", async function(){ 
         test("Gets a list of jobs", async function() {
             const response = await request(app).get('/jobs');
@@ -63,49 +59,48 @@ describe("POST /jobs", async function(){
             });
         });
     
-        // test("Gets a company by name or handle", async function() {
-        //     const response = await request(app).get('/jobs?search=TEST');
-        //     const jobs = response.body.jobs;
+        test("Gets a job by title", async function() {
+            const response = await request(app).get('/jobs?search=test');
+            const jobs = response.body.jobs;
     
-        //     expect(response.statusCode).toBe(200);
-        //     expect(jobs).toHaveLength(1);
-        //     expect(jobs[0].handle).toEqual('TEST');
-        //     expect(jobs[0]).toEqual({"handle": "TEST", "name": "testing"});
-        // });
+            expect(response.statusCode).toBe(200);
+            expect(jobs).toHaveLength(1);
+            expect(jobs[0]).toEqual({"title": "test title", "company_handle": "TEST"});
+        });
     
-        // test("Gets a list of jobs by minimum number of employees", async function() {
-        //     const response = await request(app).get('/jobs?min_employees=1');
-        //     const jobs = response.body.jobs;
+        test("Gets a list of jobs by minimum salary", async function() {
+            const response = await request(app).get('/jobs?min_salary=50000');
+            const jobs = response.body.jobs;
     
-        //     expect(response.statusCode).toBe(200);
-        //     expect(jobs).toHaveLength(1);
-        //     expect(jobs[0]).toEqual({"handle": "TEST", "name": "testing"});
-        // });
+            expect(response.statusCode).toBe(200);
+            expect(jobs).toHaveLength(1);
+            expect(jobs[0]).toEqual({"title": "test title", "company_handle": "TEST"});
+        });
     
-        // test("Gets an empty list when no records match query string", async function() {
-        //     const response = await request(app).get('/jobs?min_employees=11');
-        //     const jobs = response.body.jobs;
+        test("Gets an empty list when no records match query string", async function() {
+            const response = await request(app).get('/jobs?min_salary=80000');
+            const jobs = response.body.jobs;
     
-        //     expect(response.statusCode).toBe(200);
-        //     expect(jobs).toHaveLength(0);
-        // });
+            expect(response.statusCode).toBe(200);
+            expect(jobs).toHaveLength(0);
+        });
     
-        // test("Gets a list of jobs by maximum number of employees", async function() {
-        //     const response = await request(app).get('/jobs?max_employees=11');
-        //     const jobs = response.body.jobs;
+        test("Gets a list of jobs by maximum salary", async function() {
+            const response = await request(app).get('/jobs?max_salary=50000');
+            const jobs = response.body.jobs;
     
-        //     expect(response.statusCode).toBe(200);
-        //     expect(jobs).toHaveLength(1);
-        //     expect(jobs[0]).toEqual({"handle": "TEST", "name": "testing"});
-        // });
+            expect(response.statusCode).toBe(200);
+            expect(jobs).toHaveLength(1);
+            expect(jobs[0]).toEqual({"title": "test title", "company_handle": "TEST"});
+        });
     
-        // test("Gets an empty list when no records match query string", async function() {
-        //     const response = await request(app).get('/jobs?max_employees=1');
-        //     const jobs = response.body.jobs;
+        test("Gets an empty list when no records match query string", async function() {
+            const response = await request(app).get('/jobs?max_salary=0');
+            const jobs = response.body.jobs;
     
-        //     expect(response.statusCode).toBe(200);
-        //     expect(jobs).toHaveLength(0);
-        // });
+            expect(response.statusCode).toBe(200);
+            expect(jobs).toHaveLength(0);
+        });
     });
 
 // GET /jobs/id
