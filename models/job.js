@@ -102,6 +102,23 @@ class Job {
         }
         return result.rows[0];
     }
+
+    /**DELETE job from database given id
+     * returning message of "job deleted" if id is correct
+     */
+    static async delete(id) {
+        const result = await db.query(
+            `DELETE FROM jobs
+                WHERE id=$1
+                RETURNING id`,
+                [id]
+        );
+        
+        if (result.rows.length === 0) {
+            throw { message: "Invalid id", status: 404};
+        }
+        return 'Job deleted'
+    }
 }
 
 module.exports = Job;

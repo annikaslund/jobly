@@ -79,6 +79,14 @@ router.patch('/:id', async function(req, res, next){
 /** DELETE /jobs/:id deletes specified job and returns a message upon deletion. 
  * message: "Job deleted"
 */
+router.delete('/:id', async function(req, res, next){
+    try {
+        const message = await Job.delete(req.params.id);
+        return res.json({ message });
+    } catch (err) {
+        return next(err);
+    }
+})
 
 
 module.exports = router;
