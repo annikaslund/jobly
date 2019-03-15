@@ -36,7 +36,7 @@ class Company {
 
     /** return a company's data given handle 
      * it will return the existing company data as:
-       {handle, name, num_employees, description, logo_url} 
+       {handle, name, num_employees, description, logo_url, jobs: [{jobData}]} 
      */
     static async findOne(handle){
         const result = await db.query(

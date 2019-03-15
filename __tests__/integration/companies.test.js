@@ -146,8 +146,8 @@ describe("DELETE /companies/:handle", async function(){
 
 afterEach(async function(){
     await db.query(`DELETE FROM companies`);
-})
+});
 
 afterAll(async function(){
     await db.end()
-})
+});

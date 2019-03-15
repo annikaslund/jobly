@@ -3,3 +3,65 @@ process.env.NODE_ENV = "test";
 const request = require("supertest");
 const app = require("../../app");
 const db = require("../../db");
+
+beforeEach(async function(){
+    let companyRes = await db.query(`
+        INSERT INTO companies (handle, name, num_employees, description, logo_url)
+        VALUES ('TEST', 'testing', 10, 'testing description', 'test.jpeg')
+        RETURNING handle`
+    );
+    
+    let jobRes = await db.query(`
+        INSERT INTO jobs (title, salary, equity, company_handle, date_posted)
+        VALUES ('test title', 50000, 0.5, 'TEST', current_timestamp)`
+    );
+
+    companyRes.rows[0].jobs = jobRes.rows;
+});
+
+// POST /jobs
+
+describe("POST /jobs", async function(){ 
+    test("Create a job and return the new job data", async function() {
+        const response = await request(app)
+        .post('/jobs')
+        .send({
+            title: "test2 title", 
+            salary: 50000,
+            equity: 0.5,
+            company_handle: "TEST"
+        });
+        const job = response.body.job;
+
+        expect(response.statusCode).toBe(200);
+        expect(job).toEqual({
+            "company_handle": "TEST",
+            "date_posted": expect.any(String),
+            "equity": 0.5,
+            "id": expect.any(Number),
+            "salary": 50000,
+            "title": "test2 title"
+        });
+    });
+});
+
+// GET /jobs
+    // testing search
+    // min_salary 
+    // max_salary
+
+// GET /jobs/id
+
+// PATCH /jobs/id
+
+// DELETE /jobs/id
+
+afterEach(async function(){
+    await db.query(`DELETE FROM companies`);
+});
+
+afterAll(async function(){
+    await db.end()
+});
+
+// go back to companies test make sure job info is there
