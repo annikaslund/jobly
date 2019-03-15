@@ -16,13 +16,12 @@ router.get('/', async function(req, res, next){
     } catch (err) {
         return next(err);
     }
-})
+});
 
 /** POST /jobs creates a new job and returns the new job data as 
- * job: {title, salary, equity, company_handle, date_posted}*/
+ * job: {id, title, salary, equity, company_handle, date_posted} */
 router.post('/', async function(req, res, next){
     try{
-        //add job with jsonschema validation
         const result = jsonschema.validate(req.body, jobSchema);
 
         if (!result.valid) {
@@ -37,6 +36,19 @@ router.post('/', async function(req, res, next){
     } catch (err) {
         return next(err);
     }
-})
+});
+
+/** GET /jobs/:id returns all information about a single specified job as
+ * job: {id, title, salary, equity, company_handle, date_posted}
+*/
+
+/** PATCH /jobs/:id updates specified job and returns the updated job as 
+ * job: {id, title, salary, equity, company_handle, date_posted}
+*/
+
+/** DELETE /jobs/:id deletes specified job and returns a message upon deletion. 
+ * message: "Job deleted"
+*/
+
 
 module.exports = router;

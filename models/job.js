@@ -11,7 +11,7 @@ class Job {
         const result = await db.query(`
             INSERT INTO jobs (title, salary, equity, company_handle, date_posted)
             VALUES ($1, $2, $3, $4, current_timestamp)
-            RETURNING id title, salary, equity, company_handle, date_posted`,
+            RETURNING id, title, salary, equity, company_handle, date_posted`,
             [data.title, data.salary, data.equity, data.company_handle]
         )
         return result.rows[0]
