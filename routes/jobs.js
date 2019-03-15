@@ -1,5 +1,6 @@
 const express = require("express");
 const router = new express.Router();
+const ExpressError = require("../helpers/expressError");
 const Job = require("../models/Job");
 const jsonschema = require("jsonschema");
 const jobSchema = require("../schemas/jobSchema.json");
