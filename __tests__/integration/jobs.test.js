@@ -12,8 +12,8 @@ beforeEach(async function(){
     );
     
     let jobRes = await db.query(`
-        INSERT INTO jobs (title, salary, equity, company_handle, date_posted)
-        VALUES ('test title', 50000, 0.5, 'TEST', current_timestamp)`
+        INSERT INTO jobs (id, title, salary, equity, company_handle, date_posted)
+        VALUES (9000, 'test title', 50000, 0.5, 'TEST', current_timestamp)`
     );
 
     companyRes.rows[0].jobs = jobRes.rows;
@@ -54,8 +54,8 @@ describe("POST /jobs", async function(){
             expect(response.statusCode).toBe(200);
             expect(jobs).toHaveLength(1);
             expect(jobs[0]).toEqual({ 
-            "company_handle": "TEST",
-            "title": "test title"
+                "company_handle": "TEST",
+                "title": "test title"
             });
         });
     
@@ -104,6 +104,23 @@ describe("POST /jobs", async function(){
     });
 
 // GET /jobs/id
+describe("GET /jobs/:id", async function(){ 
+    test("Gets a job by id", async function() {
+        const jobID = await db.query(`SELECT id FROM jobs WHERE title='test title'`)
+        const response = await request(app).get(`/jobs/${jobID.rows[0].id}`);
+        const job = response.body.job;
+        console.log("JOBS: ", job);
+        expect(response.statusCode).toBe(200);
+        expect(job).toEqual({
+            "company_handle": "TEST",
+            "date_posted": expect.any(String),
+            "equity": 0.5,
+            "id": expect.any(Number),
+            "salary": 50000,
+            "title": "test title"
+        });
+    });
+});
 
 // PATCH /jobs/id
 
