@@ -161,6 +161,26 @@ describe("PATCH /jobs/:id", async function () {
 });
 
 // DELETE /jobs/id
+describe("DELETE /jobs/:id", async function(){ 
+    test("Delete a job returns a friendly message if sucessful.", async function() {
+        const jobID = await db.query(`SELECT id FROM jobs WHERE title='test title'`)
+        const response = await request(app)
+        .delete(`/jobs/${jobID.rows[0].id}`);
+        const message = response.body.message;
+        
+        expect(response.statusCode).toBe(200);
+        expect(message).toEqual('Job deleted');
+    });
+
+    test("Deleting a job that doesn't exist will return an error message.", async function() {
+        const response = await request(app)
+        .delete('/jobs/1');
+        const message = response.body.message;
+        
+        expect(response.statusCode).toBe(404);
+        expect(message).toEqual('Invalid id');
+    });
+});
 
 afterEach(async function () {
     await db.query(`DELETE FROM jobs`);
