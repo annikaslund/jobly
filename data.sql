@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS companies;
+DROP TABLE IF EXISTS companies, jobs 
 
 CREATE TABLE companies (
     handle text PRIMARY KEY, 
@@ -22,3 +22,6 @@ CREATE TABLE jobs (
     company_handle text NOT NULL REFERENCES companies ON DELETE CASCADE, 
     date_posted timestamp without time zone
 );
+
+INSERT INTO jobs (title, salary, equity, company_handle, date_posted)
+VALUES ('instructor', 50.00, 0.3, 'RIT', current_timestamp)
