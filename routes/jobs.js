@@ -10,7 +10,8 @@ const jsonschema = require("jsonschema");
 router.post('/', async function(req, res, next){
     try{
         let jobData = req.body.job;
-        let job = Job.create(jobData);
+        //add job with jsonschema validation
+        let job = await Job.create(jobData);
         return res.json({ jobs })   
     } catch (err) {
         return next(err);
@@ -21,8 +22,9 @@ router.post('/', async function(req, res, next){
 router.get('/', async function(req, res, next){
     try{
         //get search term if there is any
+        debugger;
         let searchData = req.query;
-        let jobs = Job.search(searchData);
+        let jobs = await Job.search(searchData);
         return res.json({ jobs })   
     } catch (err) {
         return next(err);
