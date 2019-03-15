@@ -17,10 +17,10 @@ router.get('/', async function(req, res, next){
 /** POST a job and return the new job data */
 router.post('/', async function(req, res, next){
     try{
-        let jobData = req.body.job;
+        let jobData = req.body;
         //add job with jsonschema validation
         let job = await Job.create(jobData);
-        return res.json({ jobs })   
+        return res.json({ job })   
     } catch (err) {
         return next(err);
     }
