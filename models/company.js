@@ -48,6 +48,15 @@ class Company {
         if (result.rows.length === 0){
             throw { message: 'Invalid handle', status: 404 };
         }
+
+        const jobs = await db.query(
+            `SELECT title, salary, equity, company_handle, date_posted
+                FROM jobs
+                WHERE company_handle=$1`, [handle]
+        )
+
+        result.rows[0].jobs = jobs.rows;
+
         return result.rows[0];
     }
 

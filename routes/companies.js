@@ -1,6 +1,7 @@
 const express = require("express");
 const router = new express.Router();
 const Company = require("../models/Company");
+//const Job = require("../models/Job");
 const ExpressError = require("../helpers/expressError");
 const searchHelper = require("../helpers/companySearch");
 const jsonschema = require("jsonschema");
