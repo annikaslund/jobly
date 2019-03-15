@@ -50,7 +50,7 @@ router.get('/:id', async function(req, res, next){
     } catch (err) {
         return next(err);
     }
-})
+});
 
 /** PATCH /jobs/:id updates specified job and returns the updated job as 
  * job: {id, title, salary, equity, company_handle, date_posted}

@@ -18,7 +18,8 @@ class Job {
     }
 
     /** search() returns a list of jobs
-     * it will return all jobs in db if nothing was searched
+     * it will return all jobs in db if nothing was searched as -
+     *      jobs: [{title, company_handle}, {title, company_handle}, ...]
      * it will return a filtered list of jobs if there is any query passed
      */
     static async search(urlData) {
@@ -66,7 +67,9 @@ class Job {
         }
     }
 
-    /** findOne() returns a single job from the database. */
+    /** findOne() returns a single job from the database as 
+     * job: {id, title, salary, equity, company_handle, date_posted}
+    */
     static async findOne(id){
         let result = await db.query(`
             SELECT id, title, salary, equity, company_handle, date_posted
