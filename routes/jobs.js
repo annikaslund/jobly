@@ -59,6 +59,7 @@ router.get('/:id', async function(req, res, next){
 router.patch('/:id', async function(req, res, next){
     try {
         const jobID = req.params.id;
+        req.body['id'] = jobID;
         const result = jsonschema.validate(req.body, updateJobSchema);
 
         if (!result.valid) {
@@ -67,6 +68,7 @@ router.patch('/:id', async function(req, res, next){
             let error = new ExpressError(listOfErrors, 400);
             return next(error);
         }
+        delete req.body.id;
 
         let job = await Job.update(req.body, jobID);
         return res.json({ job })

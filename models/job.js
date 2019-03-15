@@ -98,7 +98,7 @@ class Job {
     const { query, values } = sqlForPartialUpdate('jobs', data, 'id', id, Job.safeData());
         let result = await db.query(query, values);
         if (result.rows.length === 0){
-            throw {message: "invalid handle", status: 404};
+            throw {message: "invalid id", status: 404};
         }
         return result.rows[0];
     }
