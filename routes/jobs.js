@@ -32,7 +32,7 @@ router.post('/', async function(req, res, next){
         }
 
         let job = await Job.create(req.body);
-        return res.json({ job })   
+        return res.json({ job }); 
     } catch (err) {
         return next(err);
     }
@@ -41,6 +41,16 @@ router.post('/', async function(req, res, next){
 /** GET /jobs/:id returns all information about a single specified job as
  * job: {id, title, salary, equity, company_handle, date_posted}
 */
+router.get('/:id', async function(req, res, next){
+    try {
+        let jobID = req.params.id;
+        let job = await Job.findOne(jobID);
+
+        return res.json({ job });
+    } catch (err) {
+        return next(err);
+    }
+})
 
 /** PATCH /jobs/:id updates specified job and returns the updated job as 
  * job: {id, title, salary, equity, company_handle, date_posted}

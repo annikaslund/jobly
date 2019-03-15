@@ -39,6 +39,7 @@ class Job {
         }
 
         if (min_salary && max_salary && (min_salary > max_salary)){
+            // should return object with error, not new express instance
             throw new ExpressError("min_salary must be less than max_salary", 400);
         }
 
@@ -63,6 +64,22 @@ class Job {
             let jobs = await db.query(sql);
             return jobs.rows ;
         }
+    }
+
+    /** findOne() returns a single job from the database. */
+    static async findOne(id){
+        let result = await db.query(`
+            SELECT id, title, salary, equity, company_handle, date_posted
+            FROM jobs
+            WHERE id=$1`,
+            [id]
+        );
+
+        if (result.rows.length === 0){
+            throw { message: 'Invalid id', status: 404 };
+        }
+
+        return result.rows[0];
     }
 }
 
