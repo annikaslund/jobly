@@ -4,6 +4,7 @@ const ExpressError = require("../helpers/expressError");
 const Job = require("../models/Job");
 const jsonschema = require("jsonschema");
 const jobSchema = require("../schemas/jobSchema.json");
+const updateJobSchema = require("../schemas/updateJobSchema.json");
 
 /** GET /jobs returns a list of filtered jobs as 
  * jobs: [{handle, name}, {handle, name}, ...] */
@@ -55,6 +56,25 @@ router.get('/:id', async function(req, res, next){
 /** PATCH /jobs/:id updates specified job and returns the updated job as 
  * job: {id, title, salary, equity, company_handle, date_posted}
 */
+router.patch('/:id', async function(req, res, next){
+    try {
+        const jobID = req.params.id;
+        const result = jsonschema.validate(req.body, updateJobSchema);
+
+        if (!result.valid) {
+            //pass validation errors to error handler
+            let listOfErrors = result.errors.map(error => error.stack);
+            let error = new ExpressError(listOfErrors, 400);
+            return next(error);
+        }
+
+        let job = await Job.update(req.body, jobID);
+        return res.json({ job })
+
+    } catch (err) {
+        return next(err);
+    }
+});
 
 /** DELETE /jobs/:id deletes specified job and returns a message upon deletion. 
  * message: "Job deleted"

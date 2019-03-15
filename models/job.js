@@ -1,8 +1,14 @@
 const db = require('../db');
 const ExpressError = require('../helpers/expressError');
+const sqlForPartialUpdate = require('../helpers/partialUpdate');
 
 /** Job of the site */
 class Job {
+
+    static safeData(){
+        let validCols = ['title', 'salary', 'equity', 'company_handle', 'date_posted']
+        return validCols;
+    }
 
     /** create() add a new job to the db
      * if all datafields are valid
@@ -82,6 +88,18 @@ class Job {
             throw { message: 'Invalid id', status: 404 };
         }
 
+        return result.rows[0];
+    }
+
+    /** update() updates specified job and returns the updated job as 
+    * job: {id, title, salary, equity, company_handle, date_posted}
+    */
+   static async update(data, id){
+    const { query, values } = sqlForPartialUpdate('jobs', data, 'id', id, Job.safeData());
+        let result = await db.query(query, values);
+        if (result.rows.length === 0){
+            throw {message: "invalid handle", status: 404};
+        }
         return result.rows[0];
     }
 }
